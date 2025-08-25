@@ -1,5 +1,5 @@
 from data_loader import load_data
-from config_loader import load_config
+from data_filter import filter_data
 
 from pathlib import Path
 
@@ -15,24 +15,20 @@ if  __name__ == "__main__":
     print("[Option B: ]")
     choice = input("Enter your choice (A/B): ").strip().upper()
 
-    initial_filter_config = load_config("initial_filter")
-
     # Determine user input
     if choice == "A":
+        config_choice = "option_A"
         print("✅ You have selected option 'A'")
-        selected_config = initial_filter_config["option_A"]
 
-        data_set = data_set.drop(selected_config["remove_rows"], axis = 0) # Remove row(s)
-        data_set = data_set.drop(selected_config["remove_columns"], axis = 1) # Remove column(s)
     elif choice == "B":
-        print("✅ You have selected option 'B'")
-        selected_config = initial_filter_config["option_B"]
+        config_choice = "option_B"
+        print("✅ You have selected option 'B'")    
 
-        data_set = data_set.drop(selected_config["remove_rows"], axis = 0) # Remove row(s)
-        data_set = data_set.drop(selected_config["remove_columns"], axis = 1) # Remove column(s)
     else:
         print("❌ Invalid choice. Please run the program again and choose A or B.")
 
+
+    data_set = filter_data(config_choice, data_set)
     print(data_set)
 
 
@@ -42,4 +38,5 @@ if  __name__ == "__main__":
 
     # Export modified data as excel in output folder
     output_file = output_folder / "output.xlsx"
-    # data_set.to_excel(output_folder, index=False)
+    data_set.to_excel(output_file, index=False)
+    print(f"✅ File saved to: {output_file}")
