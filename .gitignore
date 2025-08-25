@@ -3,6 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Ignore all Excel files
+*.xlsx
+*.xls
+
 # C extensions
 *.so
 
