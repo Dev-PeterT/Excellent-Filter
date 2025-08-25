@@ -1,23 +1,26 @@
 {
     "option_A": {
         "remove_row": 0,
-        "remove_columns": [],
+        "remove_columns": [""],
 
-        "initial_filter_column": [],
-        "initial_filter_options": [],
+        "initial_filter_column": "",
+        "initial_filter_options": [""],
 
-        "secondary_filter_column": 0,
-        "secondary_filter_options": []
+        "secondary_filter_column": "",
+        "secondary_filter_options": [""]
     },
 
     "option_B": {
         "initial_remove_row": 0,
-        "initial_remove_columns": [1, 6, 7, 8, 13, 14, 15],
+        "initial_remove_columns": [""],
 
-        "initial_filter_column": 3,
+        "initial_filter_column": "",
         "initial_filter_options": [""],
 
-        "secondary_filter_column": 0,
-        "secondary_filter_options": []
+        "secondary_filter_column": "",
+        "secondary_filter_options": [""],
+
+        "tertiary_filter_column": "",
+        "tertiary_filter_options": [""]
     }
 }
