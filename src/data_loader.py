@@ -20,6 +20,6 @@ def load_data():
     print(f"📂 Loading file: {file_path.name}")
 
     # Load the excel file into DataFrame
-    data_frame = pd.read_excel(file_path)
+    data_frame = pd.read_excel(file_path, header=None)
 
     return data_frame

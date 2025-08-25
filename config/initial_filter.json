@@ -1,4 +1,11 @@
 {
-    "remove_columns": {},
-    "remove_rows": {}
+    "option_A": {
+        "remove_rows": [0],
+        "remove_columns": []
+    },
+
+    "option_B": {
+        "remove_rows": [0],
+        "remove_columns": [1, 6, 7, 8, 13, 14, 15]
+    }
 }
