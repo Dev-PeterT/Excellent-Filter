@@ -3,24 +3,30 @@
         "remove_row": 0,
         "remove_columns": [""],
 
-        "initial_filter_column": "",
-        "initial_filter_options": [""],
-
-        "secondary_filter_column": "",
-        "secondary_filter_options": [""]
+        "filters": [
+            {
+                "column": "",
+                "filtering": [""],
+                "contains_flag": 0
+            },
+            {
+                "column": "",
+                "filtering": [""],
+                "contains_flag": 1
+            }
+        ]
     },
 
     "option_B": {
-        "initial_remove_row": 0,
-        "initial_remove_columns": [""],
+        "remove_row": 0,
+        "remove_columns": [""],
 
-        "initial_filter_column": "",
-        "initial_filter_options": [""],
-
-        "secondary_filter_column": "",
-        "secondary_filter_options": [""],
-
-        "tertiary_filter_column": "",
-        "tertiary_filter_options": [""]
+        "filters": [
+            {
+                "column": "",
+                "filtering": [""],
+                "contains_flag": 0
+            }
+        ]
     }
 }

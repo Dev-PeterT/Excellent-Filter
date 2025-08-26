@@ -2,29 +2,27 @@ from config_loader import load_config
 
 def filter_data(config_option: str, data_set):
     # Loads the desired filters
-    filter_config = load_config("filter")
-    selected_config = filter_config[config_option]
+    filter_config = load_config("filter")[config_option]
+    filters = filter_config.get("filters", [])
 
     # Remove unnecessary rows and columns
-    data_set = data_set.drop(selected_config.get("initial_remove_row", []), axis=0).reset_index(drop=True) # Remove row(s)
-    data_set = data_set.drop(selected_config.get("initial_remove_columns", []), axis=1) # Remove column(s)
+    data_set = data_set.drop(filter_config.get("remove_row", []), axis=0).reset_index(drop=True) # Remove row(s)
+    data_set = data_set.drop(filter_config.get("remove_columns", []), axis=1) # Remove column(s)
 
-    # Remove unnecessary and "blank/empty" data
-    filter_column = data_set[selected_config["initial_filter_column"]]
-    filter_values = filter_column.isin(selected_config["initial_filter_options"]) | filter_column.isna()
-    data_set = data_set[~filter_values].reset_index(drop=True)
+    # Loop through the filter steps based on the config option
+    for filter_step in filters:
 
-    # Specific data filtering by config option
-    if config_option == "option_A":
-        print("Testing")
+        # Checks if the column exists
+        if filter_step["column"] in data_set.columns:
+            filtering_column = data_set[filter_step["column"]]
 
-    elif config_option == "option_B":
-        filter_column = data_set[selected_config["secondary_filter_column"]]
-        filter_values = filter_column.isin(selected_config["secondary_filter_options"]) | filter_column.isna()
-        data_set = data_set[~filter_values].reset_index(drop=True)
+            # Checks for json flag (0 / 1) to check by value or check by containing
+            if filter_step["contains_flag"] == 1:
+                filtering_data = filtering_column.str.contains('|'.join(filter_step["filtering"]), na=False)
+            else:
+                filtering_data = filtering_column.isin(filter_step["filtering"]) | filtering_column.isna()
+                
+            data_set = data_set[~filtering_data].reset_index(drop=True)
 
-        filter_column = data_set[selected_config["tertiary_filter_column"]]
-        filter_values = filter_column.str.contains('|'.join(selected_config["tertiary_filter_options"]), na=False)
-        data_set = data_set[~filter_values].reset_index(drop=True)
 
     return data_set
