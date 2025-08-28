@@ -1,5 +1,6 @@
 from data_loader import load_data
 from data_filter import filter_data
+from data_sorter import sort_data
 
 from pathlib import Path
 
@@ -27,10 +28,12 @@ if  __name__ == "__main__":
     else:
         print("❌ Invalid choice. Please run the program again and choose A or B.")
 
-
+    # Filter excel
     data_set = filter_data(config_choice, data_set)
-    print(data_set)
-
+    
+    # Sort data
+    if choice == "A":
+        sort_data(data_set)
 
     # Base script's pathy by script location and not working directory
     script_directory = Path(__file__).parent

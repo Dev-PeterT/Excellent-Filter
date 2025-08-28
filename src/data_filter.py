@@ -2,7 +2,7 @@ from config_loader import load_config
 
 def filter_data(config_option: str, data_set):
     # Loads the desired filters
-    filter_config = load_config("filter")[config_option]
+    filter_config = load_config("filtering_properties")[config_option]
     filters = filter_config.get("filters", [])
 
     # Remove unnecessary rows and columns
@@ -16,9 +16,11 @@ def filter_data(config_option: str, data_set):
         if filter_step["column"] in data_set.columns:
             filtering_column = data_set[filter_step["column"]]
 
-            # Checks for json flag (0 / 1) to check by value or check by containing
-            if filter_step["contains_flag"] == 1:
+            # Checks for json flag (0: Exact value with blanks / 1: Exact values only / 2: Contains the value) and filters data based of the flag
+            if filter_step["contains_flag"] == 2:
                 filtering_data = filtering_column.str.contains('|'.join(filter_step["filtering"]), na=False)
+            elif filter_step["contains_flag"] == 1:
+                filtering_data = filtering_column.isin(filter_step["filtering"])
             else:
                 filtering_data = filtering_column.isin(filter_step["filtering"]) | filtering_column.isna()
                 
