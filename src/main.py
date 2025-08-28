@@ -30,6 +30,7 @@ if  __name__ == "__main__":
 
     # Filter excel
     data_set = filter_data(config_choice, data_set)
+    print(data_set)
     
     # Sort data
     if choice == "A":
