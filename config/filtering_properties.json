@@ -1,0 +1,37 @@
+{
+    "filtering_properties_A": {
+        "remove_row": 0,
+        "remove_columns": [""],
+
+        "filters": [
+            {
+                "column": "",
+                "filtering": [],
+                "contains_flag": 0
+            },
+            {
+                "column": "",
+                "filtering": [""],
+                "contains_flag": 2
+            },
+            {
+                "column": "",
+                "filtering": [""],
+                "contains_flag": 1
+            }
+        ]
+    },
+
+    "filtering_properties_B": {
+        "remove_row": 0,
+        "remove_columns": [""],
+
+        "filters": [
+            {
+                "column": "",
+                "filtering": [],
+                "contains_flag": 0
+            }
+        ]
+    }
+}

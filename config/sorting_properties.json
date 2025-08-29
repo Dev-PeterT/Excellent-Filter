@@ -1,0 +1,38 @@
+{
+    "sorting_properties_A": {
+        "sorting_category": [
+            {
+                "sorting_name": "",
+                "filtering_column": "",
+                "filtering_information": [""],
+
+                "sub_sorting_rules": [
+                    {
+                        "sub_filtering_column": "",
+                        "sub_filtering_categories": {
+                            "online_bookings": [""],
+                            "virtual": [""],
+                            "in_person": [""]
+                        }
+                    }
+                ]
+            },
+            {
+                "sorting_name": "",
+                "filtering_column": "",
+                "filtering_information": [""],
+
+                "sub_sorting_rules": [
+                    {
+                        "sub_filtering_column": "",
+                        "sub_filtering_categories": {
+                            "online_bookings": [""],
+                            "virtual": [""],
+                            "in_person": [""]
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
