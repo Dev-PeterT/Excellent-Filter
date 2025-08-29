@@ -2,7 +2,7 @@ from config_loader import load_config
 
 def filter_data(config_option: str, data_set):
     # Loads the desired filters
-    filter_config = load_config("filtering_properties")[config_option]
+    filter_config = load_config("filtering_properties")["filtering_properties_" + config_option]
     filters = filter_config.get("filters", [])
 
     # Remove unnecessary rows and columns

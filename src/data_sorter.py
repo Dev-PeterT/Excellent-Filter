@@ -2,53 +2,78 @@ import re
 import pandas as pd
 from config_loader import load_config
 
-def sort_data(data_set):
-    # Load all the sorting properties and rules
-    sorting_rules = load_config("sorting_rules")
+def sort_data(config_option, data_set):
+    # Work on a copy so original dataset is untouched
+    working_sorted_data = data_set.copy()
+
+    # Load the sorting properties config
     sorting_properties = load_config("sorting_properties")
 
-    sub_column = sorting_rules.get("sub_sorting_column", "")
-    sub_categories = sorting_rules.get("sub_sorting_categories", {})
+    # Build the key dynamically
+    sort_key = "sorting_properties_" + config_option
 
-    # Builds a map to sort the data into
-    sorted_categories = {}
-    for group, categories in sorting_properties.items():
-        for category, items in categories.items():
-            for item in items:
-                sorted_categories[item] = (group, category)
+    # Exit early if no sorting instructions for this config
+    if sort_key not in sorting_properties:
+        print(f"⚠️ No sorting instructions found for '{config_option}'. Exiting module.")
+        return {
+            "filtered_data": working_sorted_data
+        }
 
-    # Sorts the data into the map created earlier
     sorted_data = []
-    for group, categories in sorting_properties.items():
-        for category in categories.keys():
-            mask = data_set[sorting_rules["sorting_column"]].isin(sorting_properties[group][category])
-            subset = data_set[mask]
 
-            row_data = {
-                "Group": group,
-                "Category": category,
-                "Total": len(subset)
-            }
+    # Loop through each sorting category defined in JSON for this config
+    for category_config in sorting_properties[sort_key].get("sorting_category", []):
+        sorting_name = category_config.get("sorting_name", "")
+        filtering_column = category_config.get("filtering_column", "")
+        filtering_information = category_config.get("filtering_information", [])
+        sub_sorting_rules = category_config.get("sub_sorting_rules", [])
 
-            # Only execute if the column exists
-            if "sub_sorting_rules" in sorting_rules:
-                for rule in sorting_rules["sub_sorting_rules"]:
-                    sub_column = rule.get("sub_sorting_column", "")
-                    sub_categories = rule.get("sub_sorting_categories", {})
+        # Skip if the filtering column doesn't exist in dataset
+        if not filtering_column or filtering_column not in working_sorted_data.columns:
+            continue
 
-                    # Only execute if the column exists
-                    if sub_column and sub_column in subset.columns:
-                        for sub_name, keywords in sub_categories.items():
-                            # Normalize column and keywords
-                            column_values = subset[sub_column].astype(str).str.strip().str.lower()
-                            escaped_keywords = [kw.strip().lower() for kw in keywords]
+        # Normalize both column values and filtering information
+        column_values = working_sorted_data[filtering_column].astype(str).str.strip().str.lower()
+        escaped_keywords = [kw.strip().lower() for kw in filtering_information]
 
-                            # Count rows where column contains any of the keywords
-                            filtering_data = column_values.apply(lambda x: any(kw in x for kw in escaped_keywords))
-                            row_data[sub_name] = filtering_data.sum()
+        # Filter rows where column contains ANY of the keywords
+        mask = column_values.apply(lambda x: any(kw in x for kw in escaped_keywords))
+        subset = working_sorted_data[mask]
 
-            sorted_data.append(row_data)
+        # Skip empty subsets
+        if subset.empty:
+            continue
 
-    # Convert to DataFrame
-    sorted_data_df = pd.DataFrame(sorted_data)
-    print(sorted_data_df)
+        row_data = {
+            "Category": sorting_name,
+            "Total": len(subset)
+        }
+
+        # Process sub-sorting rules if any
+        for rule in sub_sorting_rules:
+            sub_column = rule.get("sub_filtering_column", "")
+            sub_categories = rule.get("sub_filtering_categories", {})
+
+            if sub_column and sub_column in subset.columns:
+                column_values = subset[sub_column].astype(str).str.strip().str.lower()
+
+                for sub_name, keywords in sub_categories.items():
+                    escaped_keywords = [kw.strip().lower() for kw in keywords]
+                    filtering_data = column_values.apply(lambda x: any(kw in x for kw in escaped_keywords))
+                    row_data[sub_name] = filtering_data.sum()
+
+        sorted_data.append(row_data)
+
+        # Remove the matched rows from working_data
+        working_sorted_data = working_sorted_data.drop(subset.index)
+
+    # Convert results to DataFrame
+    sorted_data = pd.DataFrame(sorted_data)
+    print(sorted_data)
+    
+    print(working_sorted_data)
+
+    return {
+        "sorted_data": sorted_data,
+        "working_sorted_data": working_sorted_data
+    }
